@@ -1,6 +1,6 @@
 {
   "type": "panel",
-  "name": "Grouped Bar Chart",
+  "name": "CHC Grouped Bar Chart",
   "id": "grafana-groupedbarchart-panel",
 
   "info": {
@@ -11,17 +11,17 @@
     },
     "keywords": ["groupedBarChart", "panel"],
     "logos": {
-      "small": "src/img/groupedBarChart_logo_small.png",
-      "large": "src/img/groupedBarChart_logo_large.png"
+      "small": "img/groupedBarChart_logo_small.png",
+      "large": "img/groupedBarChart_logo_large.png"
     },
     "links": [
       {"name": "Project site", "url": "https://github.com/gipong/grafana-groupedbarchart-panel.git"}
     ],
     "screenshots": [
-      {"name": "Grouped bar chart", "path": "src/img/groupedbarchart.png"},
-      {"name": "metrics", "path": "src/img/groupedbarchart-metrics.png"},
-      {"name": "options", "path": "src/img/groupedbarchart-options.png"},
-      {"name": "colors", "path": "src/img/groupedbarchart-colors.png"}
+      {"name": "Grouped bar chart", "path": "img/groupedbarchart.png"},
+      {"name": "metrics", "path": "img/groupedbarchart-metrics.png"},
+      {"name": "options", "path": "img/groupedbarchart-options.png"},
+      {"name": "colors", "path": "img/groupedbarchart-colors.png"}
     ],
     "version": "1.0.0",
     "updated": "2017-12-23"

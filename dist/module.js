@@ -1,16 +1,14 @@
-'use strict';
+"use strict";
 
-System.register(['./ctrl'], function (_export, _context) {
-    "use strict";
-
-    var GroupedBarChartCtrl;
-    return {
-        setters: [function (_ctrl) {
-            GroupedBarChartCtrl = _ctrl.GroupedBarChartCtrl;
-        }],
-        execute: function () {
-            _export('PanelCtrl', GroupedBarChartCtrl);
-        }
-    };
+Object.defineProperty(exports, "__esModule", {
+  value: true
 });
+Object.defineProperty(exports, "PanelCtrl", {
+  enumerable: true,
+  get: function get() {
+    return _ctrl.GroupedBarChartCtrl;
+  }
+});
+
+var _ctrl = require("./ctrl");
 //# sourceMappingURL=module.js.map
