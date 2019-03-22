@@ -23,6 +23,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -157,9 +165,7 @@ function (_MetricsPanelCtrl) {
           res.push(e);
         });
 
-        this.data = res.sort(function (a, b) {
-          return a.label > b.label ? -1 : b.label > a.label ? 1 : 0;
-        });
+        this.data = res; //.sort((a, b) => {return (a.label>b.label)?-1:((b.label>a.label)?1:0)});
       } else {
         this.data = [{
           label: "Machine001",
@@ -227,9 +233,11 @@ function (_MetricsPanelCtrl) {
           this.avgLineShow = opts.avgLineShow;
           this.axesConfig = [];
           this.element = elem.find(opts.element)[0];
-          this.options = d3.keys(this.data[0]).filter(function (key) {
-            return key !== 'label';
-          });
+          this.options = _toConsumableArray(new Set(opts.data.reduce(function (c, r) {
+            return c.concat(Object.keys(r).filter(function (k) {
+              return k !== 'label';
+            }));
+          }, [])));
           this.avgList = {};
           this.options.forEach(function (d) {
             _this3.avgList[d] = 0;
@@ -317,18 +325,10 @@ function (_MetricsPanelCtrl) {
             }), 0];
             this.axesConfig[4].domain(domainCal);
             var xAxisConfig = this.svg.append('g').attr('class', 'x axis').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.height + this.margin.top, ")")).call(this.xAxis).selectAll('text').style('fill', "".concat(this.fontColor));
+            var match = this.labelOrientation.match(/^([1-9]\d*) degrees\b|^vertical$/);
 
-            switch (this.labelOrientation) {
-              case 'horizontal':
-                break;
-
-              case '45 degrees':
-                xAxisConfig.style('text-anchor', 'end').style('transform', 'rotate(-45deg)');
-                break;
-
-              case 'vertical':
-                xAxisConfig.style('text-anchor', 'end').style('transform', 'rotate(-90deg)');
-                break;
+            if (match) {
+              xAxisConfig.style('text-anchor', 'end').style('transform', 'rotate(-' + (match[1] || 90) + 'deg)');
             }
 
             var yAxisConfig = this.svg.append('g').attr('class', 'y axis').attr('transform', "translate(".concat(this.margin.left, ", ").concat(this.margin.top, ")")).style('fill', "".concat(this.fontColor)).call(this.yAxis);

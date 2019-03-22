@@ -126,7 +126,7 @@ export class GroupedBarChartCtrl extends MetricsPanelCtrl {
                 this.avgLineShow = opts.avgLineShow;
                 this.axesConfig = [];
                 this.element = elem.find(opts.element)[0];
-                this.options = d3.keys(this.data[0]).filter(function(key) { return key !== 'label'; });
+                this.options = [...new Set(opts.data.reduce((c, r) => c.concat(Object.keys(r).filter(k => k !== 'label')), []))];
                 this.avgList = {};
                 this.options.forEach(d => {this.avgList[d] = 0});
                 this.options = this.options.filter(d => d!=='valores');
@@ -224,17 +224,9 @@ export class GroupedBarChartCtrl extends MetricsPanelCtrl {
                     .selectAll('text')
                     .style('fill', `${this.fontColor}`)
 
-                switch(this.labelOrientation) {
-                    case 'horizontal':
-                        break;
-                    case '45 degrees':
-                        xAxisConfig.style('text-anchor', 'end')
-                            .style('transform', 'rotate(-45deg)');
-                        break;
-                    case 'vertical':
-                        xAxisConfig.style('text-anchor', 'end')
-                            .style('transform', 'rotate(-90deg)');
-                        break;
+                var match = this.labelOrientation.match(/^([1-9]\d*) degrees\b|^vertical$/);
+                if (match) {
+                    xAxisConfig.style('text-anchor', 'end').style('transform', 'rotate(-' + (match[1] || 90) + 'deg)');
                 }
 
                 let yAxisConfig = this.svg.append('g')

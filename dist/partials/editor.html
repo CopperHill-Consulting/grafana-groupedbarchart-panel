@@ -21,7 +21,7 @@
         <div class="gf-form">
             <span class="gf-form-label width-11">Orientation</span>
             <div class="gf-form-select-wrapper width-9">
-                <select class="gf-form-input" ng-model="ctrl.panel.labelOrientation" ng-options="t for t in ['horizontal', '45 degrees', 'vertical']" ng-change="ctrl.render()"></select>
+                <select class="gf-form-input" ng-model="ctrl.panel.labelOrientation" ng-options="t for t in ['0 degrees (horizontal)', '15 degrees', '30 degrees', '45 degrees', '60 degrees', '75 degrees', '90 degrees (vertical)']" ng-change="ctrl.render()"></select>
             </div>
         </div>
         <gf-form-switch class="gf-form" label="Show Average Line" label-class="width-11" checked="ctrl.panel.avgLineShow" on-change="ctrl.render()"></gf-form-switch>
