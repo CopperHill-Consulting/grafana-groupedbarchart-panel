@@ -53,7 +53,7 @@ var panelDefaults = {
     position: 'On graph'
   },
   chartType: 'stacked bar chart',
-  labelOrientation: 'horizontal',
+  labelOrientation: '0 degrees (horizontal)',
   orientation: 'vertical',
   avgLineShow: true,
   labelSpace: 40,
@@ -77,7 +77,8 @@ var panelDefaults = {
   paddingWidth: 40,
   paddingHeight: 80,
   colorSet: [],
-  colorSch: []
+  colorSch: [],
+  reverseLegend: false
 };
 
 var GroupedBarChartCtrl =
@@ -231,6 +232,7 @@ function (_MetricsPanelCtrl) {
           this.fontColor = opts.fontColor;
           this.labelOrientation = opts.labelOrientation;
           this.avgLineShow = opts.avgLineShow;
+          this.reverseLegend = opts.reverseLegend;
           this.axesConfig = [];
           this.element = elem.find(opts.element)[0];
           this.options = _toConsumableArray(new Set(opts.data.reduce(function (c, r) {
@@ -248,11 +250,11 @@ function (_MetricsPanelCtrl) {
           this.data.forEach(function (d) {
             var stackVal = 0;
             d.valores = _this3.options.map(function (name, i, o) {
-              if (i !== 0) stackVal = stackVal + +d[o[i - 1]];
-              _this3.avgList[name] = _this3.avgList[name] + d[name];
+              if (i !== 0) stackVal += +d[o[i - 1]] || 0;
+              _this3.avgList[name] = _this3.avgList[name] + (+d[name] || 0);
               return {
                 name: name,
-                value: +d[name],
+                value: +d[name] || 0,
                 stackVal: stackVal
               };
             });
@@ -433,7 +435,7 @@ function (_MetricsPanelCtrl) {
 
             switch (loc) {
               case 'On graph':
-                var defaultOptions = this.chartType == 'bar chart' || this.orientation == 'horizontal' ? this.options.slice() : this.options.slice().reverse();
+                var defaultOptions = this.reverseLegend ? this.options.slice().reverse() : this.options.slice();
                 this.legend = this.svg.selectAll('.legend').data(defaultOptions).enter().append('g').attr('class', 'legend').attr('transform', function (d, i) {
                   return "translate(50,".concat(i * 20 + _this5.margin.top, ")");
                 });
@@ -492,6 +494,7 @@ function (_MetricsPanelCtrl) {
           labelOrientation: ctrl.panel.labelOrientation,
           labelSpace: ctrl.panel.labelSpace,
           avgLineShow: ctrl.panel.avgLineShow,
+          reverseLegend: ctrl.panel.reverseLegend,
           color: ctrl.panel.colorSch
         });
         ctrl.panel.colorSet = [];

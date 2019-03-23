@@ -11,7 +11,7 @@ const panelDefaults = {
         position: 'On graph',
     },
     chartType: 'stacked bar chart',
-    labelOrientation: 'horizontal',
+    labelOrientation: '0 degrees (horizontal)',
     orientation: 'vertical',
     avgLineShow: true,
     labelSpace: 40,
@@ -35,7 +35,8 @@ const panelDefaults = {
     paddingWidth: 40,
     paddingHeight: 80,
     colorSet: [],
-    colorSch: []
+    colorSch: [],
+    reverseLegend: false
 };
 
 export class GroupedBarChartCtrl extends MetricsPanelCtrl {
@@ -124,6 +125,7 @@ export class GroupedBarChartCtrl extends MetricsPanelCtrl {
                 this.fontColor = opts.fontColor;
                 this.labelOrientation = opts.labelOrientation;
                 this.avgLineShow = opts.avgLineShow;
+                this.reverseLegend = opts.reverseLegend;
                 this.axesConfig = [];
                 this.element = elem.find(opts.element)[0];
                 this.options = [...new Set(opts.data.reduce((c, r) => c.concat(Object.keys(r).filter(k => k !== 'label')), []))];
@@ -133,9 +135,9 @@ export class GroupedBarChartCtrl extends MetricsPanelCtrl {
                 this.data.forEach(d => {
                     let stackVal = 0;
                     d.valores = this.options.map((name, i, o) => {
-                        if (i !== 0) stackVal = stackVal + (+d[o[i-1]]);
-                        this.avgList[name] = this.avgList[name] + d[name];
-                        return {name: name, value: +d[name], stackVal: stackVal};
+                        if (i !== 0) stackVal += +d[o[i-1]] || 0;
+                        this.avgList[name] = this.avgList[name] + (+d[name] || 0);
+                        return {name: name, value: +d[name] || 0, stackVal: stackVal};
                     });
                 });
                 this.options.forEach(d => {
@@ -366,7 +368,7 @@ export class GroupedBarChartCtrl extends MetricsPanelCtrl {
                 let labelSpace = this.labelSpace;
                 switch(loc) {
                     case 'On graph':
-                        let defaultOptions = (this.chartType == 'bar chart' || this.orientation == 'horizontal') ? this.options.slice(): this.options.slice().reverse();
+                        let defaultOptions = this.reverseLegend ? this.options.slice().reverse() : this.options.slice();
                         this.legend = this.svg.selectAll('.legend')
                             .data(defaultOptions)
                             .enter().append('g')
@@ -435,6 +437,7 @@ export class GroupedBarChartCtrl extends MetricsPanelCtrl {
                 labelOrientation: ctrl.panel.labelOrientation,
                 labelSpace: ctrl.panel.labelSpace,
                 avgLineShow: ctrl.panel.avgLineShow,
+                reverseLegend: ctrl.panel.reverseLegend,
                 color: ctrl.panel.colorSch
             });
 
